@@ -5,7 +5,7 @@ import ItemList from "./components/itemList";
 import { ProgramData } from "./types/programData";
 import prisma from "@/lib/prismaClient";
 import React, { useState, useEffect } from 'react';
-import { searchProgram } from "./api/search/route";
+// import { searchProgram } from "./api/search/route";
 import { useForm, SubmitHandler } from "react-hook-form";
 import { z } from 'zod'
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -40,7 +40,15 @@ export default function Home() {
   })
 
   const onSearch = async () => {
-    programData = await searchProgram({ keyword, places, categories })
+
+    const params = new URLSearchParams();
+    if (keyword) params.append('keyword', keyword);
+    places.forEach(place => params.append('places', place));
+    categories.forEach(category => params.append('categories', category));
+    const response = await fetch(`http://localhost:3000/api/search?${params.toString()}`, {
+      cache: "no-store"
+    });
+    const programData: ProgramData[] = await response.json();
     setData(programData)
   }
 
@@ -111,4 +119,12 @@ async function getAllProgramData() {
   const programAllData: ProgramData[] = await response.json();
   console.log(programAllData)
   return programAllData
+}
+
+async function searchProgramData() {
+  const response = await fetch('http://localhost:3000/api/search?${params.toString()}', {
+    cache: "no-store"
+  });
+  const programData: ProgramData[] = await response.json();
+  return programData
 }
