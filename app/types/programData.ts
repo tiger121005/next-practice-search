@@ -4,4 +4,5 @@ export interface ProgramData {
     team: string;
     category: string;
     place: string;
+    id: number
 }
