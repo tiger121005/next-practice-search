@@ -3,7 +3,7 @@
 // import { PrismaClient } from '@prisma/client';
 import type { NextApiRequest, NextApiResponse } from 'next';
 import { ProgramData } from '@/app/types/programData';
-// import prisma from "@/lib/prismaClient"
+import prisma from "@/lib/prismaClient"
 // import { NextResponse } from "next/server";
 import { z } from 'zod';
 import { searchFormSchema } from '@/app/action/formSchema';
@@ -138,10 +138,11 @@ import { Key } from 'react';
 // }
 
 import { NextRequest, NextResponse } from 'next/server';
-import { PrismaClient } from '@prisma/client';
+// import { PrismaClient } from '@prisma/client';
 import { searchProgram } from '@/app/action/searchProgram';
 
-const prisma = new PrismaClient();
+
+// const prisma = new PrismaClient();
 
 interface Keyword {
     keyword: string;
