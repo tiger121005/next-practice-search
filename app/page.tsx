@@ -45,7 +45,7 @@ export default function Home() {
     if (keyword) params.append('keyword', keyword);
     places.forEach(place => params.append('places', place));
     categories.forEach(category => params.append('categories', category));
-    const response = await fetch(`http://next-practice-search-rfzlw8wuw-tiger121005s-projects.vercel.app/api/search?${params.toString()}`, {
+    const response = await fetch(`https://next-practice-search-fgegdhlcs-tiger121005s-projects.vercel.app/api/search?${params.toString()}`, {
       cache: "no-store"
     });
     const programData: ProgramData[] = await response.json();
@@ -112,7 +112,7 @@ export default function Home() {
 }
 
 async function getAllProgramData() {
-  const response = await fetch('http://lnext-practice-search-rfzlw8wuw-tiger121005s-projects.vercel.app/api/post', {
+  const response = await fetch('https://next-practice-search-fgegdhlcs-tiger121005s-projects.vercel.app/api/post', {
     cache: 'no-store'
   });
   // const data: ProgramData[] = await prisma.program.findMany();
