@@ -1,6 +1,5 @@
 'use client'
 
-import Image from "next/image";
 import ItemList from "./components/itemList";
 import { ProgramData } from "./types/programData";
 import prisma from "@/lib/prismaClient";
@@ -12,6 +11,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { searchFormSchema } from "./action/formSchema";
 import '@mantine/core/styles.css';
 import { ComboboxItem, ComboboxParsedItem, createTheme, MantineProvider, MultiSelect, OptionsFilter } from "@mantine/core";
+import { getURL } from "next/dist/shared/lib/utils";
 
 interface ProgramDataProps {
   allData: ProgramData[]
@@ -23,6 +23,7 @@ export default function Home() {
   const [keyword, setKeyword] = useState("");
   const [places, setPlaces] = useState<string[]>([]);
   const [categories, setCategories] = useState<string[]>([]);
+  const [currentUrl, setCurrentUrl] = useState<string>('');
 
   useEffect(() => {
     async function getData() {
@@ -40,16 +41,25 @@ export default function Home() {
   })
 
   const onSearch = async () => {
-
     const params = new URLSearchParams();
     if (keyword) params.append('keyword', keyword);
     places.forEach(place => params.append('places', place));
     categories.forEach(category => params.append('categories', category));
-    const response = await fetch(`https://next-practice-search-fgegdhlcs-tiger121005s-projects.vercel.app/api/search?${params.toString()}`, {
+    const response = await fetch(`https://next-practice-search.vercel.app/api/search?${params.toString()}`, {
       cache: "no-store"
     });
     const programData: ProgramData[] = await response.json();
     setData(programData)
+  }
+
+  async function getAllProgramData() {
+    const response = await fetch(`https://next-practice-search.vercel.app/api/post`, {
+      cache: 'no-store'
+    });
+    // const data: ProgramData[] = await prisma.program.findMany();
+    const programAllData: ProgramData[] = await response.json();
+    console.log(programAllData)
+    return programAllData
   }
 
   const onClear = async () => {
@@ -71,6 +81,7 @@ export default function Home() {
         <div className="text-4xl text-black">検索</div>
         <div className="flex">
           <div>
+            <p>{currentUrl}</p>
             <p>キーワード</p>
             <input type="text" value={keyword} onChange={(event) => setKeyword(event.target.value)} className="text-black" />
           </div>
@@ -111,12 +122,3 @@ export default function Home() {
   );
 }
 
-async function getAllProgramData() {
-  const response = await fetch('https://next-practice-search-fgegdhlcs-tiger121005s-projects.vercel.app/api/post', {
-    cache: 'no-store'
-  });
-  // const data: ProgramData[] = await prisma.program.findMany();
-  const programAllData: ProgramData[] = await response.json();
-  console.log(programAllData)
-  return programAllData
-}
